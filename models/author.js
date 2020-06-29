@@ -21,8 +21,8 @@ const AuthorSchema = new Schema({
     },
 });
 
-AuthorSchema.virtual("name").get(() => {
-    const fullName = "";
+AuthorSchema.virtual("name").get(function() {
+    let fullName = "";
     if(this.first_name && this.family_name) {
         fullName = this.family_name + ", " + this.first_name;
     }
@@ -40,4 +40,4 @@ AuthorSchema.virtual("url").get(() => {
     return "/catalog/author/" + this._id;
 });
 
-module.exports = mongoose.model("authors", AuthorSchema);
+module.exports = mongoose.model("Author", AuthorSchema);

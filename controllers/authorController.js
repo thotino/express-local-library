@@ -1,7 +1,14 @@
 const Author = require("../models/author");
 
-exports.authorList = function(req, res) {
-    res.send("");
+exports.authorList = function(req, res, next) {
+    Author.find()
+        .populate("author")
+        .sort([[ "family_name", "ascending" ]])
+        .exec(function(err, authors) {
+            if(err) {return next(err);}
+            res.render("authorList", {title: "Author List", authorList: authors,});
+        });
+    // res.send("");
 };
 
 exports.authorDetail = function(req, res) {

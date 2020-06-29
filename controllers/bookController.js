@@ -1,11 +1,55 @@
+const async = require("async");
+
 const Book = require("../models/book");
+const Author = require("../models/author");
+const Genre = require("../models/genre");
+const BookInstance = require("../models/bookinstance");
+
 
 exports.index = function(req, res) {
-    res.send("Site Home Page");
+    async.parallel({
+        bookCount: (callback) => {            
+            Book.count({}, callback);
+        },
+
+        bookInstanceCount: (callback) => {
+            // console.log("bookInstance");
+            BookInstance.count({}, callback);
+        },
+
+        bookInstanceAvailableCount: (callback) => {
+            // console.log("book available");
+            BookInstance.count({status: "Available"}, callback);
+        },
+
+        authorCount: (callback) => {
+            // console.log("auth");
+            Author.count({}, callback);
+        },
+
+        genreCount: (callback) => {
+            // console.log("genre");
+            Genre.count({}, callback);
+        },
+
+    }, function(err, results) {
+        console.log("HERE");
+
+        res.render("index", {
+            title: "Local Library Home",
+            error: err,
+            data: results,
+        });
+    });
 };
 
-exports.bookList = function(req, res) {
-    res.send("");
+exports.bookList = function(req, res, next) {
+    Book.find({}, "title author")
+        .populate("author")
+        .exec((err, books) => {
+            if (err) { return next(err); }
+            res.render("bookList", {title: "Book List", bookList: books});
+        });
 };
 
 exports.bookDetail = function(req, res) {

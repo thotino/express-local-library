@@ -1,7 +1,15 @@
 const BookInstance = require("../models/bookinstance");
 
-exports.bookInstanceList = function(req, res) {
-    res.send("");
+exports.bookInstanceList = function(req, res, next) {
+    BookInstance.find()
+        .populate("book")
+        .exec((err, bookInstances) => {
+            if(err) {return next(err);}
+            res.render("bookInstanceList", {
+                title: "Book Instance List",
+                bookInstances: bookInstances,
+            });
+        });
 };
 
 exports.bookInstanceDetail = function(req, res) {

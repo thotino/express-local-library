@@ -36,7 +36,7 @@ AuthorSchema.virtual("lifespan").get(() => {
     return (this.date_of_death.getYear() - this.date_of_birth.getYear()).toString();
 });
 
-AuthorSchema.virtual("url").get(() => {
+AuthorSchema.virtual("url").get(function() {
     return "/catalog/author/" + this._id;
 });
 

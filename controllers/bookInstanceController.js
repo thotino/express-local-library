@@ -13,7 +13,20 @@ exports.bookInstanceList = function(req, res, next) {
 };
 
 exports.bookInstanceDetail = function(req, res) {
-    res.send("" + req.params.id);
+    BookInstance.findById(req.params.id)
+        .populate("book")
+        .exec((err, bookInstance) => {
+            if(err) { return next(err); }
+            if(bookInstance == null) {
+                const err = new Error("Book Copy Not Found");
+                err.status = 404;
+                return next(err);
+            }
+            res.render("bookInstanceDetail", { 
+                title: "Copy: " + bookInstance.book.title, 
+                bookInstance: bookInstance
+            });
+        });
 };
 
 exports.bookInstanceCreateGet = function(req, res) {

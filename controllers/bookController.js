@@ -1,4 +1,6 @@
 const async = require("async");
+const { body, validationResult } = require("express-validator/check");
+const { sanitizeBody } = require("express-validator/filter");
 
 const Book = require("../models/book");
 const Author = require("../models/author");
@@ -76,13 +78,30 @@ exports.bookDetail = function(req, res) {
     // res.send("" + req.params.id);
 };
 
-exports.bookCreateGet = function(req, res) {
-    res.send("");
+exports.bookCreateGet = function(req, res, next) {
+    async.parallel({
+        authors: (callback) => {
+            Author.find(callback);
+        },
+        genres: (callback) => {
+            Genre.find(callback);
+        },
+    }, function(err, results) {
+        if(err) { return next(err); }
+        res.render("bookForm", {
+            title: "Create Book",
+            authors:results.authors,
+            genres: results.genres,
+        });
+    });
+    // res.send("");
 };
 
-exports.bookCreatePost = function(req, res) {
-    res.send("");
-};
+exports.bookCreatePost = [
+    (req, res, next) => {
+        
+    }
+];
 
 exports.bookDeleteGet = function(req, res) {
     res.send("");

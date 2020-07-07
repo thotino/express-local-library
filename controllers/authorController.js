@@ -72,8 +72,25 @@ exports.authorCreatePost = [
     },
 ];
 
-exports.authorDeleteGet = function(req, res) {
-    res.send("");
+exports.authorDeleteGet = function(req, res, next) {
+    async.parallel({
+        author: (callback) => {
+            Author.findById(req.params.id).exec(callback);
+        },
+        authorBooks: (callback) => {
+            Book.find({ "author": req.params.id }).exec(callback);
+        },
+    }, function(err, results) {
+        if(err) { return next(err); }
+        if(results.author == null) {
+            res.redirect("/catalog/authors");
+        }
+        res.render("authorDelete", {
+            title: "Delete Author",
+            author: results.author,
+            authorBooks: results.authorBooks,
+        })
+    });
 };
 
 exports.authorDeletePost = function(req, res) {

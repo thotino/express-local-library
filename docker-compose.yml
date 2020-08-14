@@ -1,0 +1,25 @@
+version: "3.8"
+services: 
+ local-library-app:
+    build: .
+    environment: 
+     PORT: 3000
+     MONGODB_URI: "mongodb://mongo:27017/local-library-database"
+    ports: 
+     - "3000:3000"
+    depends_on: 
+     - mongo
+    networks: 
+     - express-mongo
+    
+ mongo:
+    image: mongo
+    restart: always
+    ports: 
+     - 27017:27017
+    volumes: 
+     - ./data:/var/lib/data/db
+    networks: 
+     - express-mongo
+networks: 
+    express-mongo:

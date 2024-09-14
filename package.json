@@ -1,5 +1,5 @@
 {
-  "name": "express-locallibrary",
+  "name": "express-local-library",
   "version": "1.0.0",
   "private": true,
   "author": {
@@ -7,8 +7,8 @@
     "email": "gthomario@yahoo.com"
   },
   "scripts": {
-    "start": "node ./bin/www",
-    "devstart": "nodemon ./bin/www",
+    "start": "node ./bin/webserver",
+    "devstart": "nodemon ./bin/webserver",
     "serverstart": "DEBUG=express-localLibrary:* npm run devstart"
   },
   "dependencies": {

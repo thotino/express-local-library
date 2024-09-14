@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
 const bookController = require("../controllers/bookController");
@@ -47,16 +47,34 @@ router.get("/genre/:id/delete", genreController.genreDeleteGet);
 router.post("/genre/:id/delete", genreController.genreDeletePost);
 
 //BOOK INSTANCE
-router.get("/bookInstance/create", bookInstanceController.bookInstanceCreateGet);
-router.post("/bookInstance/create", bookInstanceController.bookInstanceCreatePost);
+router.get(
+  "/bookInstance/create",
+  bookInstanceController.bookInstanceCreateGet
+);
+router.post(
+  "/bookInstance/create",
+  bookInstanceController.bookInstanceCreatePost
+);
 
 router.get("/bookInstances", bookInstanceController.bookInstanceList);
 router.get("/bookInstance/:id", bookInstanceController.bookInstanceDetail);
 
-router.get("/bookInstance/:id/update", bookInstanceController.bookInstanceUpdateGet);
-router.post("/bookInstance/:id/update", bookInstanceController.bookInstanceUpdatePost);
+router.get(
+  "/bookInstance/:id/update",
+  bookInstanceController.bookInstanceUpdateGet
+);
+router.post(
+  "/bookInstance/:id/update",
+  bookInstanceController.bookInstanceUpdatePost
+);
 
-router.get("/bookInstance/:id/delete", bookInstanceController.bookInstanceDeleteGet);
-router.post("/bookInstance/:id/delete", bookInstanceController.bookInstanceDeletePost);
+router.get(
+  "/bookInstance/:id/delete",
+  bookInstanceController.bookInstanceDeleteGet
+);
+router.post(
+  "/bookInstance/:id/delete",
+  bookInstanceController.bookInstanceDeletePost
+);
 
 module.exports = router;

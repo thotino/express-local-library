@@ -30,39 +30,25 @@ const genres = [];
 const books = [];
 const bookinstances = [];
 
-function authorCreate(first_name, family_name, d_birth, d_death, cb) {
+async function authorCreate(first_name, family_name, d_birth, d_death) {
   authordetail = { first_name: first_name, family_name: family_name };
   if (d_birth != false) authordetail.date_of_birth = d_birth;
   if (d_death != false) authordetail.date_of_death = d_death;
 
   const author = new Author(authordetail);
 
-  author.save(function (err) {
-    if (err) {
-      cb(err, null);
-      return;
-    }
-    console.log("New Author: " + author);
-    authors.push(author);
-    cb(null, author);
-  });
+  await author.save();
+  authors.push(author);
 }
 
-function genreCreate(name, cb) {
+async function genreCreate(name) {
   const genre = new Genre({ name: name });
 
-  genre.save(function (err) {
-    if (err) {
-      cb(err, null);
-      return;
-    }
-    console.log("New Genre: " + genre);
-    genres.push(genre);
-    cb(null, genre);
-  });
+  await genre.save();
+  genres.push(genre);
 }
 
-function bookCreate(title, summary, isbn, author, genre, cb) {
+async function bookCreate(title, summary, isbn, author, genre) {
   bookdetail = {
     title: title,
     summary: summary,
@@ -72,18 +58,11 @@ function bookCreate(title, summary, isbn, author, genre, cb) {
   if (genre != false) bookdetail.genre = genre;
 
   const book = new Book(bookdetail);
-  book.save(function (err) {
-    if (err) {
-      cb(err, null);
-      return;
-    }
-    console.log("New Book: " + book);
-    books.push(book);
-    cb(null, book);
-  });
+  await book.save();
+  books.push(book);
 }
 
-function bookInstanceCreate(book, imprint, due_back, status, cb) {
+async function bookInstanceCreate(book, imprint, due_back, status) {
   bookinstancedetail = {
     book: book,
     imprint: imprint,
@@ -92,19 +71,16 @@ function bookInstanceCreate(book, imprint, due_back, status, cb) {
   if (status != false) bookinstancedetail.status = status;
 
   const bookinstance = new BookInstance(bookinstancedetail);
-  bookinstance.save(function (err) {
-    if (err) {
-      console.log("ERROR CREATING BookInstance: " + bookinstance);
-      cb(err, null);
-      return;
-    }
-    console.log("New BookInstance: " + bookinstance);
-    bookinstances.push(bookinstance);
-    cb(null, book);
-  });
+  await bookinstance.save();
+  bookinstances.push(bookinstance);
 }
 
-function createGenreAuthors(cb) {
+async function createGenreAuthors() {
+  await Promise.all([
+    authorCreate("Patrick", "Rothfuss", "1973-06-06", false, callback),
+    authorCreate("Ben", "Bova", "1932-11-8", false, callback),
+    authorCreate("Isaac", "Asimov", "1920-01-02", "1992-04-06", callback),
+  ]);
   async.series(
     [
       function (callback) {

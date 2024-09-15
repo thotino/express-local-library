@@ -1,7 +1,6 @@
 "use strict";
 const Author = require("../models/author");
 const Book = require("../models/book");
-const async = require("async");
 const { body, validationResult } = require("express-validator");
 const { sanitizeBody } = require("express-validator");
 

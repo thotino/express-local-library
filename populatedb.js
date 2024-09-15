@@ -17,12 +17,6 @@ const Author = require("./models/author");
 const Genre = require("./models/genre");
 const BookInstance = require("./models/bookinstance");
 
-// const mongoose = require("mongoose");
-// const mongoDB = userArgs[0];
-// mongoose.connect(mongoDB, { useNewUrlParser: true });
-// mongoose.Promise = global.Promise;
-// const db = mongoose.connection;
-// db.on("error", console.error.bind(console, "MongoDB connection error:"));
 const MongoDBConnector = require("./MongoDBConnector");
 
 const mongoDBConnector = new MongoDBConnector(userArgs[0]);

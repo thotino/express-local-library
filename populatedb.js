@@ -1,7 +1,8 @@
 #! /usr/bin/env node
 "use strict";
 console.log(
-  "This script populates some test books, authors, genres and bookinstances to your database. Specified database as argument - e.g.: populatedb mongodb+srv://cooluser:coolpassword@cluster0-mbdj7.mongodb.net/local_library?retryWrites=true"
+  "This script populates some test books, authors, genres and bookinstances to your database. \
+  Specified database as argument - e.g.: populatedb mongodb+srv://cooluser:coolpassword@cluster0-mbdj7.mongodb.net/local_library?retryWrites=true"
 );
 
 // Get arguments passed on command line
@@ -11,15 +12,22 @@ if (!userArgs[0].startsWith('mongodb')) {
     console.log('ERROR: You need to specify a valid mongodb URL as the first argument');
     return
 }
+
+```sh
+docker pull mongodb/mongodb-community-server:latest
+docker run -it --rm --name mongodb -d mongodb/mongodb-community-server:latest -p 27017:27017
+```;
 */
+const databaseURL = "mongodb://127.0.0.1/local-mongo";
 const Book = require("./models/book");
 const Author = require("./models/author");
 const Genre = require("./models/genre");
 const BookInstance = require("./models/bookinstance");
 
 const MongoDBConnector = require("./MongoDBConnector");
+const logger = require("./logging");
 
-const mongoDBConnector = new MongoDBConnector(userArgs[0]);
+const mongoDBConnector = new MongoDBConnector(databaseURL);
 
 const authors = [];
 const genres = [];
@@ -27,33 +35,33 @@ const books = [];
 const bookInstances = [];
 
 async function createAuthor(firstName, familyName, birthDate, deathDate) {
-  authordetail = { first_name: firstName, family_name: familyName };
-  if (birthDate != false) authordetail.date_of_birth = birthDate;
-  if (deathDate != false) authordetail.date_of_death = deathDate;
+  const authorDetail = { first_name: firstName, family_name: familyName };
+  if (birthDate != false) authorDetail.date_of_birth = birthDate;
+  if (deathDate != false) authorDetail.date_of_death = deathDate;
 
-  const author = new Author(authordetail);
+  const author = new Author(authorDetail);
 
   await author.save();
   authors.push(author);
 }
 
 async function createGenre(name) {
-  const genre = new Genre({ name: name });
+  const genre = new Genre({ name });
 
   await genre.save();
   genres.push(genre);
 }
 
 async function createBook(title, summary, isbn, author, genre) {
-  bookdetail = {
+  const bookDetail = {
     title: title,
     summary: summary,
     author: author,
     isbn: isbn,
   };
-  if (genre != false) bookdetail.genre = genre;
+  if (genre != false) bookDetail.genre = genre;
 
-  const book = new Book(bookdetail);
+  const book = new Book(bookDetail);
   await book.save();
   books.push(book);
 }
@@ -175,4 +183,7 @@ mongoDBConnector
   .then(createGenreAuthors)
   .then(createBooks)
   .then(createBookInstances)
+  .catch((err) => {
+    logger.error(err);
+  })
   .finally(mongoDBConnector.close);

@@ -1,14 +1,7 @@
 "use strict";
+
 const mongoose = require("mongoose");
-
-// const mongoDB = "mongodb://127.0.0.1/local-library-database";
-// mongoose.connect(mongoDB, { useNewUrlParser: true });
-
-// const database = mongoose.connection;
-// database.on(
-//   "error",
-//   console.error.bind(console, "MongoDB connection error : ")
-// );
+const logger = require("./logging");
 
 class MongoDBConnector {
   #databaseURL;
@@ -17,7 +10,12 @@ class MongoDBConnector {
     this.#databaseURL = databaseURL;
   }
   async connect() {
-    this.#connection = await mongoose.createConnection(this.#databaseURL);
+    this.#connection = await mongoose
+      .createConnection(this.#databaseURL)
+      .asPromise();
+    this.#connection.on("error", (err) => {
+      logger.error(err);
+    });
   }
   async close() {
     await this.#connection.close();

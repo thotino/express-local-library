@@ -13,11 +13,11 @@ exports.index = async function (req, res) {
     authorCount,
     genreCount,
   ] = await Promise.all([
-    Book.count({}),
-    BookInstance.count({}),
-    BookInstance.count({ status: "Available" }),
-    Author.count({}),
-    Genre.count({}),
+    Book.countDocuments({}),
+    BookInstance.countDocuments({}),
+    BookInstance.countDocuments({ status: "Available" }),
+    Author.countDocuments({}),
+    Genre.countDocuments({}),
   ]);
   const results = {
     bookCount,

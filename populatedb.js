@@ -184,4 +184,4 @@ mongoDBConnector
   .then(createBooks)
   .then(createBookInstances)
   .then(mongoDBConnector.close)
-  .catch(logger.error);
+  .catch((err) => logger.error(err));

@@ -5,15 +5,14 @@ const Book = require("../models/book");
 exports.genreList = async function (req, res) {
   const genres = await Genre.find()
     .populate("genre")
-    .sort([["name", "ascending"]])
-    .exec();
+    .sort([["name", "ascending"]]);
   res.render("genreList", { title: "Genre List", genreList: genres });
 };
 
 exports.genreDetail = async function (req, res, next) {
   const [genre, genreBooks] = await Promise.all([
-    Genre.findById(req.params.id).exec(),
-    Book.find({ genre: req.params.id }).exec(),
+    Genre.findById(req.params.id),
+    Book.find({ genre: req.params.id }),
   ]);
   if (!genre) {
     const err = new Error("Genre Not Found");
@@ -31,8 +30,7 @@ exports.genreCreateGet = async function (req, res, next) {
   res.render("genreForm", { title: "Create Genre" });
 };
 exports.genreCreatePost = async function (req, res, next) {
-  const genre = new Genre({ name: req.body.name });
-  const existingGenre = Genre.findOne({ name: req.body.name }).exec();
+  const existingGenre = Genre.findOne({ name: req.body.name });
   if (existingGenre) {
     res.redirect(existingGenre.url);
   } else {

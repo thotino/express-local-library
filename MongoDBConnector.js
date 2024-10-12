@@ -8,6 +8,7 @@ class MongoDBConnector {
   #connection;
   constructor(databaseURL) {
     this.#databaseURL = databaseURL;
+    this.#connection = null;
   }
   async connect() {
     this.#connection = await mongoose

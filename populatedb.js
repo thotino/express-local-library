@@ -15,10 +15,10 @@ if (!userArgs[0].startsWith('mongodb')) {
 
 ```sh
 docker pull mongodb/mongodb-community-server:latest
-docker run -it --rm --name mongodb -d mongodb/mongodb-community-server:latest -p 27017:27017
+docker run -it -p 27017:27017 --name mongodb -d mongodb/mongodb-community-server:latest
 ```;
 */
-const databaseURL = "mongodb://127.0.0.1/local-mongo";
+const databaseURL = "mongodb://127.0.0.1:27017/local-mongo";
 const Book = require("./models/book");
 const Author = require("./models/author");
 const Genre = require("./models/genre");
@@ -183,7 +183,5 @@ mongoDBConnector
   .then(createGenreAuthors)
   .then(createBooks)
   .then(createBookInstances)
-  .catch((err) => {
-    logger.error(err);
-  })
-  .finally(mongoDBConnector.close);
+  .then(mongoDBConnector.close)
+  .catch(logger.error);

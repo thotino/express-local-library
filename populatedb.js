@@ -80,6 +80,7 @@ async function createBookInstance(book, imprint, dueBack, status) {
 }
 
 async function createGenreAuthors() {
+  logger.info("Creating authors and genres");
   await Promise.all([
     createAuthor("Patrick", "Rothfuss", "1973-06-06", false),
     createAuthor("Ben", "Bova", "1932-11-8", false),
@@ -96,6 +97,7 @@ async function createGenreAuthors() {
 }
 
 async function createBooks() {
+  logger.info("Creating books...");
   await Promise.all([
     createBook(
       "The Name of the Wind (The Kingkiller Chronicle, #1)",
@@ -136,6 +138,7 @@ async function createBooks() {
 }
 
 async function createBookInstances() {
+  logger.info("Creating book instances...");
   await Promise.all([
     createBookInstance(books[0], "London Gollancz, 2014.", false, "Available"),
     createBookInstance(books[1], " Gollancz, 2011.", false, "Loaned"),
@@ -178,10 +181,16 @@ async function createBookInstances() {
     ),
   ]);
 }
-mongoDBConnector
-  .connect()
-  .then(createGenreAuthors)
-  .then(createBooks)
-  .then(createBookInstances)
-  .then(mongoDBConnector.close)
-  .catch((err) => logger.error(err));
+async function main() {
+  await mongoDBConnector.connect();
+  await createGenreAuthors();
+  await createBooks();
+  await createBookInstances();
+  await mongoDBConnector.close();
+  process.exit(0);
+}
+
+main().catch((err) => {
+  logger.error(err.message);
+  process.exit(1);
+});
